@@ -1,0 +1,60 @@
+/* 해/달 버튼 */
+.home-bg-mountain__item {
+  --swap-dur: 800ms; /* 클릭 전환 총 시간 */
+  --init-dur: 1000ms; /* 최초 등장 시간 */
+
+  position: absolute;
+  left: 50%;
+  bottom: 23vh; /* 기본 노출 위치 */
+  width: 15vh;
+  height: 15vh;
+  margin-left: -7.5vh;
+  border: 0;
+  background: url('/src/assets/images/home/home-item--sun.png') no-repeat 0 0 / contain;
+
+  html[data-darkmode='true'] & {
+    background-image: url('/src/assets/images/home/home-item--moon.png');
+    mix-blend-mode: difference;
+  }
+
+  /* 최초 진입 1회: 산 아래에서 위로 */
+  &.init-appear {
+    animation: fadeItemUp var(--init-dur) ease-in-out 1 forwards;
+  }
+
+  /* 클릭 시: 아래로 숨었다가(0→45%), 잠깐 머물고(45→55%), 다시 올라옴(55→100%) */
+  &.is-swapping {
+    animation: dipSwap var(--swap-dur) ease-in-out 1 both;
+  }
+}
+
+@keyframes fadeItemUp {
+  0% {
+    bottom: 0;
+  }
+  100% {
+    bottom: 23vh;
+  }
+}
+
+@keyframes dipSwap {
+  0% {
+    bottom: 23vh;
+  }
+  45% {
+    bottom: 0;
+  }
+  55% {
+    bottom: 0;
+  }
+  100% {
+    bottom: 23vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-bg-mountain__item.init-appear,
+  .home-bg-mountain__item.is-swapping {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,60 @@
+.loader {
+  display: grid;
+  place-items: center;
+  gap: 16px;
+  color: var(--fg);
+
+  &.is-full {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 9999;
+  }
+}
+
+.loader__brand {
+  width: 14vh;
+  height: 14vh;
+  background:
+    url('/src/assets/images/logo-white.png') center/contain no-repeat,
+    /* SCSS에서만 ~ 사용 */
+      radial-gradient(60% 60% at 50% 40%, rgba(139, 92, 246, 0.25), transparent 60%);
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.35));
+}
+
+.loader__bar {
+  position: relative;
+  width: 200px;
+  height: 15px;
+  background-color: rgba(255, 255, 255, 0.25);
+  overflow: hidden;
+}
+
+.loader__bar-percent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #646cffaa;
+}
+
+.loader__text {
+  letter-spacing: 0.2em;
+  font-size: 16px;
+  opacity: 0.9;
+
+  &::after {
+    content: '.';
+    animation: loading 1s linear infinite;
+  }
+}
+
+@keyframes loading {
+  50% {
+    content: '..';
+  }
+  100% {
+    content: '...';
+  }
+}

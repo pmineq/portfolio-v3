@@ -1,0 +1,190 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: url('/src/assets/images/home/home-bg.png') repeat-x top center;
+  background-size: auto 80vh;
+
+  html[data-darkmode='true'] & {
+    background-color: #15305e;
+    background-blend-mode: color-burn;
+  }
+}
+
+.home-content {
+  position: relative;
+  flex: 1;
+}
+
+.home-bg-mountain {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 23vh;
+  background: url('/src/assets/images/home/home-bg-mountain.png') repeat-x bottom center;
+  background-size: auto 100%;
+  z-index: 10;
+
+  html[data-darkmode='true'] & {
+    filter: brightness(0.6) hue-rotate(50deg);
+    transition: all 0.8s;
+  }
+}
+
+.home-bg-cloud {
+  position: absolute;
+  bottom: 18vh;
+  width: 30vh;
+  height: 32vh;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+
+  &.home-bg-cloud--left {
+    left: 0;
+    background-image: url('/src/assets/images/home/home-bg-cloud-left.png');
+    background-position: top left;
+  }
+  &.home-bg-cloud--right {
+    right: 0;
+    background-image: url('/src/assets/images/home/home-bg-cloud-right.png');
+    background-position: top right;
+  }
+
+  html[data-darkmode='true'] & {
+    mix-blend-mode: color;
+  }
+}
+
+/* 캐릭터 */
+.home-character {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.home-character_character {
+  position: relative;
+  width: 21vh;
+  height: 21vh;
+  margin-top: -17vh;
+  background: url('/src/assets/images/home/home-character.png') no-repeat 0 0 / auto 21vh;
+  z-index: 50;
+
+  &.home-character_character--left {
+    background-image: url('/src/assets/images/home/home-character--left.png');
+    animation: characterWalking 0.7s steps(2) infinite;
+  }
+  &.home-character_character--right {
+    background-image: url('/src/assets/images/home/home-character--right.png');
+    animation: characterWalking 0.7s steps(2) infinite;
+  }
+}
+
+.home-character_level {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  position: absolute;
+  top: -12px;
+  margin-left: 15px;
+  text-align: center;
+  color: #1c1c1cc1;
+  font-weight: bold;
+
+  > em {
+    font-size: 20px;
+    font-style: normal;
+  }
+  .home-character_level-small {
+    font-size: 13px;
+    opacity: 0;
+  }
+  &:hover .home-character_level-small {
+    opacity: 0.7;
+  }
+}
+
+.home-character_name {
+  position: absolute;
+  bottom: -20px;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 4px;
+  font-weight: bold;
+}
+
+/* 열기구 */
+.home-ballon {
+  position: absolute;
+  top: 40vh;
+  left: 5vw;
+  width: 10vh;
+  height: 10vh;
+  background: url('/src/assets/images/home/home-balloon.png') no-repeat center/contain;
+  will-change: transform;
+  animation: floatY 1.6s ease-in-out infinite alternate;
+  z-index: 20;
+
+  html[data-darkmode='true'] & {
+    opacity: 0;
+    transition: opacity 0.8s;
+  }
+}
+
+/* 비행선 */
+.home-zeppelin {
+  position: absolute;
+  top: 22vh;
+  right: 15vw;
+  width: 12vh;
+  height: 12vh;
+  background: url('/src/assets/images/home/home-zeppelin.png') no-repeat center/contain;
+  will-change: transform;
+  animation: floatX 2s ease-in-out infinite;
+
+  html[data-darkmode='true'] & {
+    opacity: 0;
+    transition: opacity 0.8s;
+  }
+}
+
+/* 땅 */
+.home-bottom {
+  width: 100%;
+  height: 20vh;
+  background: url('/src/assets/images/home/home-bottom.png') repeat-x 0 0 / auto 25vh;
+}
+
+/* 키프레임 */
+@keyframes characterWalking {
+  to {
+    background-position-x: -440px;
+  }
+}
+@keyframes floatY {
+  from {
+    transform: translateY(4px);
+  }
+  to {
+    transform: translateY(-4px);
+  }
+}
+@keyframes floatX {
+  0% {
+    transform: translateX(18px);
+  }
+  100% {
+    transform: translateX(-18px);
+  }
+}
+
+/* 접근성 */
+@media (prefers-reduced-motion: reduce) {
+  .home-ballon,
+  .home-zeppelin {
+    animation: none !important;
+  }
+}

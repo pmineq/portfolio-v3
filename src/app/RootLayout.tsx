@@ -1,15 +1,14 @@
+import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { RouterProvider } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { router } from 'app/router';
 import Header from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
 import BootLoader from 'components/common/Loader/Loader';
 
-export default function App() {
+export default function RootLayout() {
   const [boot, setBoot] = useState(true);
   useEffect(() => {
-    const t = setTimeout(() => setBoot(false), 1200); // 연출 시간
+    const t = setTimeout(() => setBoot(false), 1200); // 디자인용 부트 로딩 시간
     return () => clearTimeout(t);
   }, []);
 
@@ -19,7 +18,9 @@ export default function App() {
       {!boot && (
         <>
           <Header />
-          <RouterProvider router={router} />
+          <main className="container">
+            <Outlet />
+          </main>
           <Footer />
         </>
       )}
