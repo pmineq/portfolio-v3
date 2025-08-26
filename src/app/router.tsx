@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import RootLayout from './RootLayout';
-import BootLoader from 'components/common/Loader/Loader';
+import Loader from 'components/common/Loader/Loader';
 
 const Home = lazy(() => import('pages/Home/Home'));
 // const About = lazy(() => import('pages/About/About'));
@@ -18,7 +18,7 @@ export const router = createBrowserRouter(
         {
           index: true,
           element: (
-            <Suspense fallback={<BootLoader />}>
+            <Suspense fallback={<Loader />}>
               <Home />
             </Suspense>
           ),
@@ -29,7 +29,7 @@ export const router = createBrowserRouter(
         {
           path: '*',
           element: (
-            <Suspense fallback={<BootLoader />}>
+            <Suspense fallback={<Loader />}>
               <NotFound />
             </Suspense>
           ),
