@@ -77,8 +77,8 @@ export function useCharacterMovement(minX = -45, maxX = 40, speed = 22) {
     rafRef.current = requestAnimationFrame(tick);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown as any);
-      window.removeEventListener('keyup', handleKeyUp as any);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };

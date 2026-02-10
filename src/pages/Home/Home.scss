@@ -68,15 +68,30 @@
   width: 21vh;
   height: 21vh;
   margin-top: -17vh;
-  background: url('/src/assets/images/home/home-character.png') no-repeat 0 0 / auto 21vh;
+  background: url('/src/assets/images/home/home-character.png') no-repeat 0 0;
+  background-size: 21vh 21vh;
   z-index: 50;
+
+  /* 이미지 preload로 깜빡임 방지 */
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    z-index: -1;
+    background-image: url('/src/assets/images/home/home-character--left.png'),
+      url('/src/assets/images/home/home-character--right.png');
+  }
 
   &.home-character_character--left {
     background-image: url('/src/assets/images/home/home-character--left.png');
+    background-size: 42vh 21vh;
     animation: characterWalking 0.7s steps(2) infinite;
   }
   &.home-character_character--right {
     background-image: url('/src/assets/images/home/home-character--right.png');
+    background-size: 42vh 21vh;
     animation: characterWalking 0.7s steps(2) infinite;
   }
 }
@@ -130,7 +145,7 @@
 
   html[data-darkmode='true'] & {
     opacity: 0;
-    transition: opacity 0.8s;
+    transition: opacity 0.4s;
   }
 }
 
@@ -143,11 +158,11 @@
   height: 12vh;
   background: url('/src/assets/images/home/home-zeppelin.png') no-repeat center/contain;
   will-change: transform;
-  animation: floatX 2s ease-in-out infinite;
+  animation: floatX 5s ease-in-out infinite;
 
   html[data-darkmode='true'] & {
     opacity: 0;
-    transition: opacity 0.8s;
+    transition: opacity 0.4s;
   }
 }
 
@@ -161,7 +176,7 @@
 /* 키프레임 */
 @keyframes characterWalking {
   to {
-    background-position-x: -440px;
+    background-position-x: -42vh;
   }
 }
 @keyframes floatY {

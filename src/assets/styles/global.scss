@@ -31,7 +31,9 @@ body {
 button {
   cursor: pointer;
 
+  &:focus,
   &:focus-visible {
     border: 0;
+    outline: none;
   }
 }

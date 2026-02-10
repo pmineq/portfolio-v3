@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import cx from 'classnames';
 import './SunMoonToggle.scss';
-import { useDarkMode } from '../hock/useDarkMode';
+import { useDarkMode } from '../hook/useDarkMode';
 
 export default function SunMoonToggle() {
   const { isDark, toggle } = useDarkMode();
@@ -15,7 +15,9 @@ export default function SunMoonToggle() {
     setIsSwapping(true);
 
     // CSS 변수 --swap-dur 읽어서 절반(바닥) 타이밍에 토글 실행
-    const el = ref.current!;
+    const el = ref.current;
+    if (!el) return;
+
     const styles = getComputedStyle(el);
     const durStr = styles.getPropertyValue('--swap-dur').trim() || '800ms';
     const ms = durStr.endsWith('ms') ? parseFloat(durStr) : parseFloat(durStr) * 1000;

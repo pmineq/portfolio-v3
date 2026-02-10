@@ -1,0 +1,295 @@
+.contact {
+  flex: 1;
+  background-color: #ebcea8;
+  position: relative;
+  overflow: hidden;
+}
+
+// 왼쪽 스마트폰 이미지
+.contact-phone {
+  position: absolute;
+  left: 5vw;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 120px;
+  height: 180px;
+  background: url('/src/assets/images/contact/phone.png') no-repeat center;
+  background-size: contain;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  &.active {
+    animation: phoneShake 0.5s ease;
+  }
+}
+
+// 오른쪽 커피컵 이미지
+.contact-cup {
+  position: absolute;
+  right: 5vw;
+  top: 30%;
+  transform: translateY(-50%);
+  width: 140px;
+  height: 140px;
+  background: url('/src/assets/images/contact/cup.png') no-repeat center;
+  background-size: contain;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  &.active {
+    animation: cupSteam 0.8s ease;
+  }
+}
+
+@keyframes phoneShake {
+  0%,
+  100% {
+    transform: translateY(-50%) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-50%) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(-50%) rotate(5deg);
+  }
+}
+
+@keyframes cupSteam {
+  0%,
+  100% {
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.1);
+  }
+}
+
+.contact-letter {
+  display: flex;
+  width: 80vw;
+  max-width: 600px;
+  margin: 10vh auto;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 4vh;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+  }
+
+  &::before {
+    top: 0;
+    background-position: top center;
+    left: 0;
+    background-image: url('/src/assets/images/contact/contact-letter-top.webp');
+  }
+
+  &::after {
+    bottom: 0;
+    background-position: bottom center;
+    left: 0;
+    background-image: url('/src/assets/images/contact/contact-letter-bottom.webp');
+  }
+}
+
+.contact-letter__body {
+  margin: 4vh 0;
+  width: 100%;
+  padding: 2vh 6vh;
+  color: #222;
+  font-size: 14px;
+  background: url('/src/assets/images/contact/contact-letter-body.webp') repeat-y top center;
+  background-size: 100% auto;
+  min-height: 60vh;
+}
+
+// 필드 스타일
+.contact-field {
+  margin-bottom: 3vh;
+
+  label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #5c7d89;
+    margin-bottom: 0.5vh;
+    font-weight: 500;
+  }
+
+  &--message {
+    margin-bottom: 2vh;
+  }
+}
+
+.contact-field__icon {
+  color: #7cb8d4;
+  margin-right: 0.5em;
+  font-size: 16px;
+}
+
+// Input 스타일
+.contact-input {
+  width: 100%;
+  padding: 0.5vh 0;
+  border: none;
+  border-bottom: 2px solid #b8d4e0;
+  background: transparent;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-bottom-color: #7cb8d4;
+  }
+
+  &::placeholder {
+    color: #aaa;
+  }
+}
+
+// Textarea 스타일
+.contact-textarea {
+  width: 100%;
+  padding: 0.2vh 1.5vh;
+  border: 2px solid #b8d4e0;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.3);
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 1.8em,
+    #d8e8f0 1.8em,
+    #d8e8f0 calc(1.8em + 1px)
+  );
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  font-family: inherit;
+  resize: none;
+  line-height: 1.8em;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #7cb8d4;
+  }
+}
+
+// 개인정보 동의 체크박스
+.contact-agreement {
+  margin: 3vh 0;
+
+  label {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #5c7d89;
+    cursor: pointer;
+    position: relative;
+    padding-left: 2em;
+  }
+}
+
+.contact-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+
+  &:checked + .contact-checkbox__custom::after {
+    opacity: 1;
+  }
+}
+
+.contact-checkbox__custom {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border: 2px solid #7cb8d4;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+
+  &::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #7cb8d4;
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+}
+
+// 메시지
+.contact-message {
+  padding: 1.5vh 2vh;
+  margin: 2vh 0;
+  border-radius: 4px;
+  font-size: 13px;
+  text-align: center;
+  font-weight: 500;
+
+  &--error {
+    background: rgba(220, 53, 69, 0.1);
+    border: 2px solid #dc3545;
+    color: #dc3545;
+  }
+
+  &--success {
+    background: rgba(40, 167, 69, 0.1);
+    border: 2px solid #28a745;
+    color: #28a745;
+  }
+}
+
+// 전송 버튼
+.contact-submit {
+  display: block;
+  margin: 3vh auto 0;
+  padding: 1.5vh 4vw;
+  background: #7cb8d4;
+  border: 3px solid #5c9db8;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 0 #5c9db8;
+  position: relative;
+  font-family: inherit;
+
+  &:hover:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #5c9db8;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: none;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

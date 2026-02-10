@@ -1,7 +1,7 @@
 import cx from 'classnames';
 import './Home.scss';
 import SunMoonToggle from './SunMoonToggle/SunMoonToggle';
-import { useCharacterMovement } from './hock/useCharacterMovement';
+import { useCharacterMovement } from './hook/useCharacterMovement';
 
 export default function Home() {
   const { posVW, isLeft, isRight } = useCharacterMovement();
