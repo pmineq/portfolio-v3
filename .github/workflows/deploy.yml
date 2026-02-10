@@ -18,14 +18,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22    # .nvmrc에 맞춘 버전
-          cache: npm
+          node-version: 22
+          cache: yarn
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Build project
-        run: npm run build
+        run: yarn build
 
       - name: Handle SPA routing (404.html)
         run: cp dist/index.html dist/404.html
