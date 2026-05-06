@@ -465,6 +465,9 @@
   font-size: 24px;
   line-height: 1;
   touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 
   &:active:not(:disabled) {
     translate: 0 5px;
