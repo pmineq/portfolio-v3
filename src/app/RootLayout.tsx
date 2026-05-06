@@ -9,6 +9,55 @@ import LocationHUD from 'components/common/LocationHUD/LocationHUD';
 import KonamiEffect from 'components/common/KonamiEffect/KonamiEffect';
 import { GameProvider, useGame } from 'context/GameContext';
 import { useKonamiCode } from 'hooks/useKonamiCode';
+import { preloadImages } from '../utils/preloadImages';
+import homeBg from 'assets/images/home/home-bg.webp';
+import homeMountain from 'assets/images/home/home-bg-mountain.webp';
+import homeCloudLeft from 'assets/images/home/home-bg-cloud-left.webp';
+import homeCloudRight from 'assets/images/home/home-bg-cloud-right.webp';
+import homeBottom from 'assets/images/home/home-bottom.webp';
+import homeBalloon from 'assets/images/home/home-balloon.webp';
+import homeZeppelin from 'assets/images/home/home-zeppelin.webp';
+import homeSunMoon from 'assets/images/home/home-item-sun-moon-sprite.webp';
+import homeCharacterSprite from 'assets/images/home/home-character-sprite.webp';
+import homePortalAbout from 'assets/images/home/home-portal-about.webp';
+import homePortalCareer from 'assets/images/home/home-portal-career.webp';
+import homePortalContact from 'assets/images/home/home-portal-contact.webp';
+import guideCat from 'assets/images/home/guide-cat.webp';
+import homeCloudNpc from 'assets/images/home/home-cloud-npc.webp';
+import secretShop from 'assets/images/home/secret-shop.webp';
+import aboutBg from 'assets/images/about/about-bg.webp';
+import aboutFloor from 'assets/images/about/about-floor.webp';
+import aboutExitDoor from 'assets/images/about/about-exit-door.webp';
+import careerBg from 'assets/images/career/career-bg.webp';
+import careerFloor from 'assets/images/career/career-floor.webp';
+import careerExitDoor from 'assets/images/career/career-exit-door.webp';
+
+const HOME_CRITICAL_IMAGES = [
+  homeBg,
+  homeMountain,
+  homeCloudLeft,
+  homeCloudRight,
+  homeBottom,
+  homeBalloon,
+  homeZeppelin,
+  homeSunMoon,
+  homeCharacterSprite,
+  homePortalAbout,
+  homePortalCareer,
+  homePortalContact,
+  guideCat,
+  homeCloudNpc,
+  secretShop,
+];
+
+const ROUTE_IDLE_IMAGES = [
+  aboutBg,
+  aboutFloor,
+  aboutExitDoor,
+  careerBg,
+  careerFloor,
+  careerExitDoor,
+];
 
 function Layout() {
   const [boot, setBoot] = useState(true);
@@ -24,8 +73,29 @@ function Layout() {
   useKonamiCode(handleKonami);
 
   useEffect(() => {
-    const t = setTimeout(() => setBoot(false), 1200);
-    return () => clearTimeout(t);
+    let mounted = true;
+    const minimumBootTime = new Promise(resolve => window.setTimeout(resolve, 420));
+    const criticalImages = preloadImages(HOME_CRITICAL_IMAGES);
+
+    Promise.all([minimumBootTime, criticalImages]).then(() => {
+      if (!mounted) return;
+
+      setBoot(false);
+      const preloadRouteImages = () => {
+        void preloadImages(ROUTE_IDLE_IMAGES);
+      };
+
+      const requestIdleCallback = window.requestIdleCallback;
+      if (typeof requestIdleCallback === 'function') {
+        requestIdleCallback(preloadRouteImages, { timeout: 2500 });
+      } else {
+        globalThis.setTimeout(preloadRouteImages, 800);
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {

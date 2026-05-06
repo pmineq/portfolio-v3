@@ -8,7 +8,7 @@
   min-height: 0;
   overflow: hidden;
   position: relative;
-  background: url('/src/assets/images/home/home-bg.png') repeat-x top center;
+  background: url('/src/assets/images/home/home-bg.webp') repeat-x top center;
   background-color: #121820;
   background-size: auto 100%;
 
@@ -37,7 +37,7 @@
       rgba(122, 184, 218, 0.12) 58%,
       rgba(65, 112, 151, 0.26) 100%
     ),
-    url('/src/assets/images/home/home-bg.png') repeat-x top center;
+    url('/src/assets/images/home/home-bg.webp') repeat-x top center;
   background-size: auto 100%;
   box-shadow:
     inset 0 0 0 5px #0c1114,
@@ -48,7 +48,7 @@
   html[data-darkmode='true'] & {
     background:
       linear-gradient(180deg, rgba(36, 41, 91, 0.42) 0%, rgba(20, 18, 55, 0.62) 100%),
-      url('/src/assets/images/home/home-bg.png') repeat-x top center;
+      url('/src/assets/images/home/home-bg.webp') repeat-x top center;
     background-size: auto 100%;
   }
 }
@@ -68,7 +68,7 @@
   bottom: 0;
   width: 100%;
   height: 23vh;
-  background: url('/src/assets/images/home/home-bg-mountain.png') repeat-x bottom center;
+  background: url('/src/assets/images/home/home-bg-mountain.webp') repeat-x bottom center;
   background-size: auto 100%;
   z-index: 10;
 
@@ -89,13 +89,13 @@
 
   &.home-bg-cloud--left {
     left: 5px;
-    background-image: url('/src/assets/images/home/home-bg-cloud-left.png');
+    background-image: url('/src/assets/images/home/home-bg-cloud-left.webp');
     background-position: top left;
   }
 
   &.home-bg-cloud--right {
     right: 8px;
-    background-image: url('/src/assets/images/home/home-bg-cloud-right.png');
+    background-image: url('/src/assets/images/home/home-bg-cloud-right.webp');
     background-position: top right;
   }
 
@@ -484,7 +484,7 @@
   left: 8%;
   width: 72px;
   height: 72px;
-  background: url('/src/assets/images/home/home-balloon.png') no-repeat center/contain;
+  background: url('/src/assets/images/home/home-balloon.webp') no-repeat center/contain;
   will-change: transform;
   animation: floatY 1.6s ease-in-out infinite alternate;
   z-index: 20;
@@ -505,7 +505,7 @@
   left: calc(100vw + 96px);
   width: 88px;
   height: 88px;
-  background: url('/src/assets/images/home/home-zeppelin.png') no-repeat center/contain;
+  background: url('/src/assets/images/home/home-zeppelin.webp') no-repeat center/contain;
   will-change: left, transform;
   animation: zeppelinCruise 28s linear infinite;
   border: none;
@@ -527,7 +527,7 @@
   width: 108px;
   height: 82px;
   border: none;
-  background: url('/src/assets/images/home/home-cloud-npc.png') no-repeat center/contain;
+  background: url('/src/assets/images/home/home-cloud-npc.webp') no-repeat center/contain;
   image-rendering: pixelated;
   cursor: pointer;
   z-index: 22;
@@ -648,7 +648,7 @@
   width: 86px;
   height: 94px;
   border: 0;
-  background: url('/src/assets/images/home/secret-shop.png') no-repeat center / contain;
+  background: url('/src/assets/images/home/secret-shop.webp') no-repeat center / contain;
   cursor: pointer;
   opacity: 0.24;
   filter: saturate(0.86) brightness(0.96);
@@ -694,7 +694,7 @@
   bottom: 0;
   width: 100%;
   height: 96px;
-  background: url('/src/assets/images/home/home-bottom.png') repeat-x 0 0 / auto 25vh;
+  background: url('/src/assets/images/home/home-bottom.webp') repeat-x 0 0 / auto 25vh;
   z-index: 30;
 }
 
@@ -722,7 +722,7 @@
   height: 150px;
   margin-top: -126px;
   --character-x: 0vw;
-  background: url('/src/assets/images/home/home-character-sprite.png') no-repeat 0 0;
+  background: url('/src/assets/images/home/home-character-sprite.webp') no-repeat 0 0;
   background-size: 1500px 150px;
   transform: translateX(var(--character-x));
   z-index: 90;
@@ -743,7 +743,7 @@
     height: 0;
     overflow: hidden;
     z-index: -1;
-    background-image: url('/src/assets/images/home/home-character-sprite.png');
+    background-image: url('/src/assets/images/home/home-character-sprite.webp');
   }
 
   &.home-character_character--left {
@@ -782,7 +782,7 @@
   z-index: 4;
   width: 36px;
   height: 25px;
-  background: url('/src/assets/images/home/legendary-crown.png') no-repeat center / contain;
+  background: url('/src/assets/images/home/legendary-crown.webp') no-repeat center / contain;
   pointer-events: none;
   filter: drop-shadow(0 3px 0 rgba(69, 43, 15, 0.45));
   animation: legendaryCrown 1.6s ease-in-out infinite;
@@ -826,15 +826,15 @@
 }
 
 .home-portal--about {
-  background-image: url('/src/assets/images/home/home-portal-about.png');
+  background-image: url('/src/assets/images/home/home-portal-about.webp');
 }
 
 .home-portal--career {
-  background-image: url('/src/assets/images/home/home-portal-career.png');
+  background-image: url('/src/assets/images/home/home-portal-career.webp');
 }
 
 .home-portal--contact {
-  background-image: url('/src/assets/images/home/home-portal-contact.png');
+  background-image: url('/src/assets/images/home/home-portal-contact.webp');
 }
 
 .home-portal__prompt {
@@ -977,7 +977,7 @@
   --cat-frame-width: 92px;
   width: 92px;
   height: 69px;
-  background: url('/src/assets/images/home/guide-cat.png') no-repeat 0 0;
+  background: url('/src/assets/images/home/guide-cat.webp') no-repeat 0 0;
   background-size: 276px 69px;
   image-rendering: pixelated;
   filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.22));
@@ -1071,7 +1071,7 @@
 .home-dialog__npc {
   width: 60px;
   height: 45px;
-  background: url('/src/assets/images/home/guide-cat.png') no-repeat 0 0;
+  background: url('/src/assets/images/home/guide-cat.webp') no-repeat 0 0;
   background-size: 180px 45px;
   image-rendering: pixelated;
   filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.22));

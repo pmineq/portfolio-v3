@@ -31,10 +31,29 @@ body {
 button,
 [role='button'] {
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 
   &:focus,
   &:focus-visible,
   &:-moz-focusring {
     outline: none;
   }
+}
+
+:where(
+  .home-mobile-controls,
+  .about-mobile-controls,
+  .career-mobile-controls,
+  .home-mobile-key,
+  .about-mobile-key,
+  .career-mobile-key
+) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+:where(.home-mobile-controls, .about-mobile-controls, .career-mobile-controls) * {
+  -webkit-user-select: none;
+  user-select: none;
 }
