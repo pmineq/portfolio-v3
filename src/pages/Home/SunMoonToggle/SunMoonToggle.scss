@@ -2,18 +2,20 @@
 .home-bg-mountain__item {
   --swap-dur: 800ms; /* 클릭 전환 총 시간 */
   --init-dur: 1000ms; /* 최초 등장 시간 */
+  --sun-x: 0px;
+  --sun-bottom: 23vh;
 
   position: absolute;
-  left: 50%;
-  bottom: 23vh; /* 기본 노출 위치 */
+  left: var(--sun-x);
+  bottom: var(--sun-bottom); /* 기본 노출 위치 */
   width: 15vh;
   height: 15vh;
   margin-left: -7.5vh;
   border: 0;
-  background: url('/src/assets/images/home/home-item--sun.png') no-repeat 0 0 / contain;
+  background: url('/src/assets/images/home/home-item-sun-moon-sprite.png') no-repeat 0 0 / 200% 100%;
 
   html[data-darkmode='true'] & {
-    background-image: url('/src/assets/images/home/home-item--moon.png');
+    background-position: 100% 0;
     mix-blend-mode: difference;
   }
 
@@ -33,13 +35,13 @@
     bottom: 0;
   }
   100% {
-    bottom: 23vh;
+    bottom: var(--sun-bottom);
   }
 }
 
 @keyframes dipSwap {
   0% {
-    bottom: 23vh;
+    bottom: var(--sun-bottom);
   }
   45% {
     bottom: 0;
@@ -48,7 +50,7 @@
     bottom: 0;
   }
   100% {
-    bottom: 23vh;
+    bottom: var(--sun-bottom);
   }
 }
 

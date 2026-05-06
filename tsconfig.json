@@ -9,6 +9,7 @@
     "baseUrl": "src",
     "types": ["vite/client", "node"],
     "strict": true,
+    "noEmit": true,
     "skipLibCheck": true
   },
   "include": ["src", "vite.config.ts"]

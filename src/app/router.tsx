@@ -9,56 +9,25 @@ const Career = lazy(() => import('pages/Career'));
 const Contact = lazy(() => import('pages/Contact'));
 const NotFound = lazy(() => import('pages/NotFound'));
 
+const wrap = (El: React.ComponentType) => (
+  <Suspense fallback={<Loader />}>
+    <El />
+  </Suspense>
+);
+
 export const router = createBrowserRouter(
   [
     {
       path: '/',
       element: <RootLayout />,
       children: [
-        {
-          index: true,
-          element: (
-            <Suspense fallback={<Loader />}>
-              <Home />
-            </Suspense>
-          ),
-        },
-        {
-          path: 'about',
-          element: (
-            <Suspense fallback={<Loader />}>
-              <About />
-            </Suspense>
-          ),
-        },
-        {
-          path: 'career',
-          element: (
-            <Suspense fallback={<Loader />}>
-              <Career />
-            </Suspense>
-          ),
-        },
-        {
-          path: 'contact',
-          element: (
-            <Suspense fallback={<Loader />}>
-              <Contact />
-            </Suspense>
-          ),
-        },
-        {
-          path: '*',
-          element: (
-            <Suspense fallback={<Loader />}>
-              <NotFound />
-            </Suspense>
-          ),
-        },
+        { index: true,          element: wrap(Home) },
+        { path: 'about',        element: wrap(About) },
+        { path: 'career',       element: wrap(Career) },
+        { path: 'contact',      element: wrap(Contact) },
+        { path: '*',            element: wrap(NotFound) },
       ],
     },
   ],
-  {
-    basename: import.meta.env.BASE_URL,
-  },
+  { basename: import.meta.env.BASE_URL },
 );

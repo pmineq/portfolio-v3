@@ -28,12 +28,13 @@ body {
   height: 100%;
 }
 
-button {
+button,
+[role='button'] {
   cursor: pointer;
 
   &:focus,
-  &:focus-visible {
-    border: 0;
+  &:focus-visible,
+  &:-moz-focusring {
     outline: none;
   }
 }

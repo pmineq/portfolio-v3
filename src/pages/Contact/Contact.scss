@@ -1,85 +1,236 @@
 .contact {
   flex: 1;
-  background-color: #ebcea8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 86px 20px 56px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(255, 246, 220, 0.42) 0 260px, transparent 500px),
+    repeating-linear-gradient(90deg, rgba(92, 59, 35, 0.16) 0 2px, transparent 2px 64px),
+    linear-gradient(
+      90deg,
+      rgba(255, 224, 166, 0.16),
+      transparent 18%,
+      rgba(88, 51, 28, 0.12) 52%,
+      transparent 82%
+    ),
+    repeating-linear-gradient(0deg, #b98552 0 42px, #c8935f 42px 46px, #a96f42 46px 88px);
+  background-color: #b98552;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
+
+  html[data-darkmode='true'] & {
+    background:
+      radial-gradient(ellipse at 50% 48%, rgba(137, 92, 48, 0.24) 0 260px, transparent 500px),
+      repeating-linear-gradient(90deg, rgba(10, 6, 4, 0.24) 0 2px, transparent 2px 64px),
+      linear-gradient(
+        90deg,
+        rgba(255, 191, 110, 0.08),
+        transparent 18%,
+        rgba(0, 0, 0, 0.2) 52%,
+        transparent 82%
+      ),
+      repeating-linear-gradient(0deg, #442815 0 42px, #56321b 42px 46px, #331d10 46px 88px);
+    background-color: #331d10;
+  }
+}
+
+.contact-phone-wrap {
+  position: absolute;
+  left: max(24px, calc((100vw - 1120px) / 2));
+  top: 50%;
+  transform: translateY(-50%);
+  width: 150px;
+  height: 247px;
+  z-index: 5;
 }
 
 // 왼쪽 스마트폰 이미지
 .contact-phone {
-  position: absolute;
-  left: 5vw;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 120px;
-  height: 180px;
+  width: 100%;
+  height: 100%;
   background: url('/src/assets/images/contact/phone.png') no-repeat center;
   background-size: contain;
   border: none;
+  padding: 0;
   cursor: pointer;
+  image-rendering: pixelated;
+  transform: rotate(-25deg);
+  transform-origin: center;
   transition: transform 0.3s ease;
 
   &:hover {
-    transform: translateY(-50%) scale(1.05);
+    transform: translateY(-3px) rotate(-25deg) scale(1.03);
   }
 
   &.active {
-    animation: phoneShake 0.5s ease;
+    background-image: url('/src/assets/images/contact/phone-on.png');
+    animation: phoneVibrate 0.42s steps(2, end) 3;
+  }
+}
+
+.contact-phone-bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  min-width: 132px;
+  padding: 8px 12px;
+  border: 3px solid #2f2a28;
+  border-radius: 6px;
+  background: #fffef8;
+  box-shadow: 4px 4px 0 rgba(47, 42, 40, 0.24);
+  color: #2f2a28;
+  font-size: 12px;
+  text-align: center;
+  white-space: nowrap;
+  animation: phoneBubbleIn 0.18s steps(2, end);
+  pointer-events: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    border: 9px solid transparent;
+    border-top-color: #2f2a28;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: calc(100% - 3px);
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #fffef8;
   }
 }
 
 // 오른쪽 커피컵 이미지
 .contact-cup {
   position: absolute;
-  right: 5vw;
-  top: 30%;
+  right: max(24px, calc((100vw - 1120px) / 2));
+  top: 32%;
   transform: translateY(-50%);
-  width: 140px;
-  height: 140px;
-  background: url('/src/assets/images/contact/cup.png') no-repeat center;
-  background-size: contain;
-  border: none;
+  width: 156px;
+  height: 156px;
+  background: url('/src/assets/images/contact/contact-coffee-cups-sprite.png') no-repeat 0 0;
+  background-size: 780px 156px;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  image-rendering: pixelated;
+  &--1 {
+    background-position-x: -156px;
+  }
+  &--2 {
+    background-position-x: -312px;
+  }
+  &--3 {
+    background-position-x: -468px;
+  }
+  &--4 {
+    background-position-x: -624px;
+  }
+}
+.contact-cup__steam {
+  position: absolute;
+  left: 50%;
+  bottom: 118px;
+  width: 64px;
+  height: 58px;
+  transform: translateX(-50%);
+  pointer-events: none;
 
-  &:hover {
-    transform: translateY(-50%) scale(1.05);
+  span {
+    position: absolute;
+    bottom: 0;
+    width: 8px;
+    height: 22px;
+    background: rgba(255, 254, 238, 0.88);
+    box-shadow:
+      0 -8px 0 rgba(255, 254, 238, 0.64),
+      0 -16px 0 rgba(255, 254, 238, 0.32);
+    image-rendering: pixelated;
+    animation: cupSteamRise 0.9s steps(5, end) forwards;
   }
 
-  &.active {
-    animation: cupSteam 0.8s ease;
+  span:nth-child(1) {
+    left: 12px;
+    animation-delay: 0s;
+  }
+
+  span:nth-child(2) {
+    left: 28px;
+    height: 28px;
+    animation-delay: 0.08s;
+  }
+
+  span:nth-child(3) {
+    left: 44px;
+    animation-delay: 0.16s;
   }
 }
 
-@keyframes phoneShake {
-  0%,
+@keyframes cupSteamRise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 8px) scaleY(0.7);
+  }
+  18% {
+    opacity: 1;
+  }
   100% {
-    transform: translateY(-50%) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-50%) rotate(-5deg);
-  }
-  75% {
-    transform: translateY(-50%) rotate(5deg);
+    opacity: 0;
+    transform: translate(6px, -34px) scaleY(1);
   }
 }
 
-@keyframes cupSteam {
+@keyframes phoneVibrate {
   0%,
   100% {
-    transform: translateY(-50%) scale(1);
+    transform: translate(0, 0) rotate(-25deg);
   }
-  50% {
-    transform: translateY(-50%) scale(1.1);
+  20% {
+    transform: translate(-3px, 1px) rotate(-27deg);
+  }
+  40% {
+    transform: translate(3px, -1px) rotate(-23deg);
+  }
+  60% {
+    transform: translate(-2px, -1px) rotate(-26deg);
+  }
+  80% {
+    transform: translate(2px, 1px) rotate(-24deg);
+  }
+}
+
+@keyframes phoneBubbleIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
   }
 }
 
 .contact-letter {
   display: flex;
-  width: 80vw;
-  max-width: 600px;
-  margin: 10vh auto;
+  width: min(620px, calc(100vw - 40px));
+  margin: 0 auto;
   position: relative;
+  z-index: 10;
+  filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.18)) drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24));
+
+  html[data-darkmode='true'] & {
+    filter: brightness(0.86) saturate(0.9);
+  }
 
   &::before,
   &::after {
@@ -109,12 +260,44 @@
 .contact-letter__body {
   margin: 4vh 0;
   width: 100%;
-  padding: 2vh 6vh;
+  padding: 2vh 5vh;
   color: #222;
   font-size: 14px;
   background: url('/src/assets/images/contact/contact-letter-body.webp') repeat-y top center;
   background-size: 100% auto;
   min-height: 60vh;
+  max-height: 620px;
+  overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  .contact-phone-wrap,
+  .contact-cup {
+    opacity: 0.42;
+    pointer-events: none;
+  }
+
+  .contact-phone-wrap {
+    left: -22px;
+  }
+
+  .contact-cup {
+    right: -20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .contact {
+    padding: 82px 14px 48px;
+  }
+
+  .contact-letter {
+    width: calc(100vw - 28px);
+  }
+
+  .contact-letter__body {
+    padding: 18px 24px;
+  }
 }
 
 // 필드 스타일

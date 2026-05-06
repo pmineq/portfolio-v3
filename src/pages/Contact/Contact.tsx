@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import './Contact.scss';
 import { useEmailJS } from 'hooks/useEmailJS';
+import { useGame } from 'context/GameContext';
+
+const CONTACT_PHONE = '010-3193-8441';
+const CONTACT_QUEST_KEY = 'quest_contact_sent';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -12,12 +16,25 @@ export default function Contact() {
   });
   const [isAgreed, setIsAgreed] = useState(false);
   const [phoneActive, setPhoneActive] = useState(false);
-  const [cupActive, setCupActive] = useState(false);
+  const [steamBurst, setSteamBurst] = useState(0);
+  const cupVariant = useMemo(() => Math.floor(Math.random() * 5), []);
+  const phoneTimer = useRef<number | null>(null);
+  const cupTimer = useRef<number | null>(null);
 
   const { sendEmail, isLoading, error, success } = useEmailJS();
+  const { unlock, playClick, playPhone, playCoffee, playText, playTransition } = useGame();
+
+  useEffect(
+    () => () => {
+      if (phoneTimer.current) clearTimeout(phoneTimer.current);
+      if (cupTimer.current) clearTimeout(cupTimer.current);
+    },
+    [],
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    playText();
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -25,12 +42,17 @@ export default function Contact() {
     e.preventDefault();
 
     if (!isAgreed) {
+      playClick();
       alert('개인정보 수집 및 이용에 동의해주세요.');
       return;
     }
 
     try {
+      playClick();
       await sendEmail(formData);
+      localStorage.setItem(CONTACT_QUEST_KEY, 'true');
+      unlock('mail_carrier');
+      playTransition();
       alert('메일이 성공적으로 전송되었습니다!');
       // 폼 초기화
       setFormData({
@@ -41,27 +63,57 @@ export default function Contact() {
       });
       setIsAgreed(false);
     } catch (err) {
+      playClick();
       alert('메일 전송에 실패했습니다. 다시 시도해주세요.');
     }
+  };
+
+  const handlePhoneClick = () => {
+    playPhone();
+    setPhoneActive(true);
+    if (phoneTimer.current) clearTimeout(phoneTimer.current);
+    phoneTimer.current = window.setTimeout(() => setPhoneActive(false), 3500);
+  };
+
+  const handleCupClick = () => {
+    playCoffee();
+    setSteamBurst((prev) => prev + 1);
+    if (cupTimer.current) clearTimeout(cupTimer.current);
+    cupTimer.current = window.setTimeout(() => setSteamBurst(0), 950);
   };
 
   return (
     <div className={cx('contact')}>
       {/* 왼쪽 스마트폰 이미지 */}
-      <button
-        type="button"
-        className={cx('contact-phone', { active: phoneActive })}
-        onClick={() => setPhoneActive(!phoneActive)}
-        aria-label="스마트폰 아이콘"
-      />
+      <div className={cx('contact-phone-wrap')}>
+        {phoneActive && (
+          <span className={cx('contact-phone-bubble')} role="status">
+            {CONTACT_PHONE}
+          </span>
+        )}
+        <button
+          type="button"
+          className={cx('contact-phone', { active: phoneActive })}
+          onClick={handlePhoneClick}
+          aria-label="전화번호 보기"
+        />
+      </div>
 
       {/* 오른쪽 커피컵 이미지 */}
       <button
         type="button"
-        className={cx('contact-cup', { active: cupActive })}
-        onClick={() => setCupActive(!cupActive)}
-        aria-label="커피컵 아이콘"
-      />
+        className={cx('contact-cup', `contact-cup--${cupVariant}`)}
+        onClick={handleCupClick}
+        aria-label="Coffee steam"
+      >
+        {steamBurst > 0 && (
+          <span key={steamBurst} className={cx('contact-cup__steam')} aria-hidden>
+            <span />
+            <span />
+            <span />
+          </span>
+        )}
+      </button>
 
       <form className={cx('contact-letter')} onSubmit={handleSubmit}>
         <div className={cx('contact-letter__body')}>
@@ -136,7 +188,10 @@ export default function Contact() {
                 type="checkbox"
                 id="agreement"
                 checked={isAgreed}
-                onChange={(e) => setIsAgreed(e.target.checked)}
+                onChange={(e) => {
+                  playClick();
+                  setIsAgreed(e.target.checked);
+                }}
                 className={cx('contact-checkbox')}
               />
               <span className={cx('contact-checkbox__custom')} />

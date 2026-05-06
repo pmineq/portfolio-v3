@@ -1,10 +1,16 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, type CSSProperties } from 'react';
 import cx from 'classnames';
 import './SunMoonToggle.scss';
 import { useDarkMode } from '../hook/useDarkMode';
+import { useGame } from 'context/GameContext';
 
-export default function SunMoonToggle() {
+interface SunMoonToggleProps {
+  x?: number;
+}
+
+export default function SunMoonToggle({ x = 0 }: SunMoonToggleProps) {
   const { isDark, toggle } = useDarkMode();
+  const { unlock } = useGame();
   const [initAppear, setInitAppear] = useState(true); // 최초 1회 등장
   const [isSwapping, setIsSwapping] = useState(false); // 클릭 시 내려갔다 올라오기
   const ref = useRef<HTMLButtonElement>(null);
@@ -22,8 +28,10 @@ export default function SunMoonToggle() {
     const durStr = styles.getPropertyValue('--swap-dur').trim() || '800ms';
     const ms = durStr.endsWith('ms') ? parseFloat(durStr) : parseFloat(durStr) * 1000;
 
+    const goingDark = !isDark;
     timerRef.current = window.setTimeout(() => {
       toggle(); // 바닥에서 이미지 교체
+      if (goingDark) unlock('dark_mode');
     }, ms * 0.5);
   };
 
@@ -33,6 +41,7 @@ export default function SunMoonToggle() {
       type="button"
       aria-pressed={isDark}
       onClick={handleSwap}
+      style={{ '--sun-x': `${x}px` } as CSSProperties}
       className={cx('home-bg-mountain__item', {
         'init-appear': initAppear,
         'is-swapping': isSwapping,
