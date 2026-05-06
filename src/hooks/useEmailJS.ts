@@ -2,6 +2,7 @@ import { useState } from 'react';
 import emailjs from '@emailjs/browser';
 
 interface EmailData {
+  subject?: string;
   name: string;
   email: string;
   message: string;
@@ -25,15 +26,16 @@ export function useEmailJS(): UseEmailJSReturn {
     setSuccess(false);
 
     try {
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_7edqrss';
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_v2umrrj';
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'upGj3_ip3VdmDn5j9';
 
       if (!serviceId || !templateId || !publicKey) {
         throw new Error('EmailJS 환경 변수가 설정되지 않았습니다.');
       }
 
       const templateParams = {
+        contact_subject: data.subject || 'Portfolio contact',
         contact_name: data.name,
         contact_email: data.email,
         contact_message: data.message,
