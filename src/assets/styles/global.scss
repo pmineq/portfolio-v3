@@ -34,10 +34,30 @@ button,
   -webkit-tap-highlight-color: transparent;
 
   &:focus,
+  &:focus-visible {
+    outline: 0 !important;
+    outline-offset: 0 !important;
+  }
+
+  &:-moz-focusring {
+    outline: 0 !important;
+  }
+}
+
+button {
+  &:focus,
   &:focus-visible,
   &:-moz-focusring {
-    outline: none;
+    outline: 0 !important;
+    outline-offset: 0 !important;
   }
+}
+
+button::-moz-focus-inner,
+[type='button']::-moz-focus-inner,
+[type='reset']::-moz-focus-inner,
+[type='submit']::-moz-focus-inner {
+  border: 0;
 }
 
 :where(
