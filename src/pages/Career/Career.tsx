@@ -90,8 +90,8 @@ export default function Career() {
   }, [exitToHome, isExitActive, showCompanyInfo]);
 
   useEffect(() => {
-    setIsLogVisible(false);
-  }, [activeCompany.id]);
+    setIsLogVisible(isCompanyActive);
+  }, [activeCompany.id, isCompanyActive]);
 
   useEffect(() => {
     if (!isLeft && !isRight) return;

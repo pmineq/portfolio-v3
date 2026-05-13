@@ -81,8 +81,8 @@ export default function About() {
   }, [exitToHome, isExitActive, showStationInfo]);
 
   useEffect(() => {
-    setIsStatusVisible(false);
-  }, [activeStation.id]);
+    setIsStatusVisible(isStationActive);
+  }, [activeStation.id, isStationActive]);
 
   useEffect(() => {
     if (!isLeft && !isRight) return;
