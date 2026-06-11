@@ -568,13 +568,13 @@
   &::after {
     content: '';
     position: absolute;
-    right: 28px;
-    top: 21px;
+    left: 92px;
+    top: 23px;
     width: 76px;
     height: 4px;
-    background: linear-gradient(90deg, transparent, rgba(255, 246, 168, 0.9));
+    background: linear-gradient(90deg, rgba(255, 246, 168, 0.9), transparent);
     transform: rotate(-16deg);
-    transform-origin: right center;
+    transform-origin: left center;
   }
 }
 
@@ -645,8 +645,8 @@
   left: var(--shop-x);
   bottom: 78px;
   z-index: 58;
-  width: 86px;
-  height: 94px;
+  width: 66px;
+  height: 72px;
   border: 0;
   background: url('/src/assets/images/home/secret-shop.webp') no-repeat center / contain;
   cursor: pointer;
@@ -821,7 +821,7 @@
   &.is-active {
     filter: drop-shadow(0 10px 0 rgba(21, 36, 36, 0.22))
       drop-shadow(0 0 16px rgba(255, 239, 160, 0.86));
-    transform: translateY(-6px);
+    transform: translateY(-3px);
   }
 }
 
@@ -830,47 +830,12 @@
 }
 
 .home-portal--career {
+  bottom: -13px;
   background-image: url('/src/assets/images/home/home-portal-career.webp');
 }
 
 .home-portal--contact {
   background-image: url('/src/assets/images/home/home-portal-contact.webp');
-}
-
-.home-portal__prompt {
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 8px);
-  translate: -50% 0;
-  min-width: 118px;
-  padding: 7px 11px;
-  border: 2px solid #7c6248;
-  border-radius: 5px;
-  background: rgba(255, 249, 232, 0.94);
-  box-shadow: 0 4px 0 rgba(124, 98, 72, 0.22);
-  color: #3a3028;
-  font-size: 11px;
-  line-height: 1;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateY(4px);
-  transition:
-    opacity 0.18s ease,
-    transform 0.18s ease;
-
-  .home-portal:hover & {
-    opacity: 1;
-    transform: translateY(0);
-    border-color: #3359d0;
-    color: #193e8f;
-    animation: portalPrompt 0.78s steps(2, end) infinite;
-  }
-
-  html[data-darkmode='true'] & {
-    border-color: #6b5b8e;
-    background: rgba(26, 21, 48, 0.94);
-    color: #e9ddff;
-  }
 }
 
 .home-character_level {
@@ -1455,7 +1420,7 @@
 .home-active-portal-prompt {
   position: absolute;
   left: var(--portal-x);
-  bottom: 340px;
+  bottom: 304px;
   z-index: 95;
   translate: -50% 0;
   min-width: 118px;
@@ -1543,9 +1508,9 @@
   }
 
   .home-content {
-    flex: 0 0 min(80dvh, calc(100dvh - 138px));
-    height: min(80dvh, calc(100dvh - 138px));
-    margin: 12px 10px;
+    flex: 0 0 min(75dvh, calc(100dvh - 138px));
+    height: min(75dvh, calc(100dvh - 138px));
+    margin: 52px 10px 12px;
     border-width: 8px;
     border-radius: 30px;
     overflow: hidden;
@@ -1600,7 +1565,7 @@
   }
 
   .home-active-portal-prompt {
-    bottom: 276px;
+    bottom: 244px;
   }
 
   .home-title {

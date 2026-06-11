@@ -1,10 +1,24 @@
 # Portfolio v3
 
-UI Developer 포트폴리오 웹사이트
+픽셀 월드 콘셉트의 인터랙티브 프론트엔드 포트폴리오입니다.  
+캐릭터를 움직이며 About, Career, Contact 영역을 탐색하고, 숨은 상호작용과 업적을 발견할 수 있습니다.
+
+배포 URL: https://pmineq.github.io/portfolio-v3/
+
+## 주요 기능
+
+- 캐릭터 이동 기반 홈 월드와 페이지 포털
+- About/Career 서브 월드 탐색 및 근접 정보 패널
+- 업적 도감, 업적 토스트, 숨은 업적 힌트
+- NPC 대화, 숨은 상점, 점프 아이템, 다크모드 이벤트
+- 업적 보상 스킨과 전체 달성 보상 왕관
+- Contact 편지 UI와 EmailJS 메일 전송
+- 모바일 방향키/Enter 조작 지원
+- GitHub Pages 자동 배포
 
 ## 기술 스택
 
-- React 18
+- React 19
 - TypeScript
 - Vite
 - React Router
@@ -12,79 +26,20 @@ UI Developer 포트폴리오 웹사이트
 - Sass
 - EmailJS
 
-## 시작하기
-
-### 설치
-
-```bash
-# 의존성 설치
-yarn install
-```
-
-### 환경 변수 설정
-
-프로젝트 루트에 `.env` 파일을 생성하고 다음 내용을 추가하세요:
-
-```bash
-# EmailJS 설정
-VITE_EMAILJS_SERVICE_ID=your_service_id
-VITE_EMAILJS_TEMPLATE_ID=your_template_id
-VITE_EMAILJS_PUBLIC_KEY=your_public_key
-```
-
-#### EmailJS 설정 방법
-
-1. [EmailJS](https://www.emailjs.com/)에 가입하고 로그인합니다.
-2. **Email Services** 메뉴에서 이메일 서비스를 추가합니다 (Gmail, Outlook 등).
-3. **Service ID**를 복사하여 `VITE_EMAILJS_SERVICE_ID`에 입력합니다.
-4. **Email Templates** 메뉴에서 새 템플릿을 생성합니다.
-   - Template 변수: `{{subject}}`, `{{from_name}}`, `{{from_email}}`, `{{message}}`
-5. **Template ID**를 복사하여 `VITE_EMAILJS_TEMPLATE_ID`에 입력합니다.
-6. **Account** > **General** 메뉴에서 **Public Key**를 복사하여 `VITE_EMAILJS_PUBLIC_KEY`에 입력합니다.
-
-### 개발 서버 실행
-
-```bash
-yarn dev
-```
-
-브라우저에서 [http://localhost:5173](http://localhost:5173)을 열어 확인하세요.
-
-### 빌드
-
-```bash
-yarn build
-```
-
-### 프리뷰
-
-```bash
-yarn preview
-```
-
 ## 프로젝트 구조
 
-```
+```txt
 src/
-├── app/              # 앱 설정 및 라우팅
-├── assets/           # 이미지, 스타일, 폰트
-├── components/       # 공통 컴포넌트
-├── hooks/            # 커스텀 훅
-└── pages/            # 페이지 컴포넌트
-    ├── Home/         # 홈 페이지
-    ├── About/        # 소개 페이지
-    ├── Career/       # 경력 페이지
-    └── Contact/      # 연락 페이지
+├── app/                  # 루트 레이아웃, 라우터
+├── assets/               # 픽셀 이미지, 폰트, 전역 스타일
+├── components/common/    # 업적, HUD, 로더, 이펙트
+├── components/layout/    # Header, Footer
+├── context/              # 게임 상태와 업적 상태
+├── hooks/                # EmailJS, Konami code 등
+└── pages/
+    ├── Home/             # 메인 월드
+    ├── About/            # 캐릭터 정보실
+    ├── Career/           # 커리어 로드
+    ├── Contact/          # 편지/연락 페이지
+    └── NotFound.tsx      # 404 숨은 업적 페이지
 ```
-
-## 주요 기능
-
-- 🏠 인터랙티브 홈 페이지 (캐릭터 이동, 다크모드)
-- 📧 이메일 전송 기능 (EmailJS)
-- 🎨 반응형 디자인
-- 🌙 다크 모드 지원
-- ⚡️ 빠른 페이지 로딩 (React lazy loading)
-
-## 라이선스
-
-MIT

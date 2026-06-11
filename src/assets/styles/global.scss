@@ -77,3 +77,13 @@ button::-moz-focus-inner,
   -webkit-user-select: none;
   user-select: none;
 }
+
+:where(.home-wrap-transition, .about-wrap-transition, .career-wrap-transition) {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 52%, rgba(26, 32, 44, 0.78) 0 18%, rgba(6, 10, 16, 0.96) 62%),
+    #060a10;
+}

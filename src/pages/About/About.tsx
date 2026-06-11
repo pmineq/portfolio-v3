@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import cx from 'classnames';
 import LocationHUD from 'components/common/LocationHUD/LocationHUD';
-import { useGame } from 'context/GameContext';
+import { hasLegendaryReward, useGame } from 'context/GameContext';
 import { useCharacterMovement } from 'pages/Home/hook/useCharacterMovement';
 import './About.scss';
 
@@ -41,9 +41,22 @@ export default function About() {
   const navigate = useNavigate();
   const contentRef = useRef<HTMLDivElement | null>(null);
   const characterRef = useRef<HTMLDivElement | null>(null);
+  const wrapTransitionTimer = useRef<number | null>(null);
+  const [isWrapTransition, setIsWrapTransition] = useState(false);
+  const handleWorldWrap = useCallback(() => {
+    setIsWrapTransition(true);
+    if (wrapTransitionTimer.current) clearTimeout(wrapTransitionTimer.current);
+    wrapTransitionTimer.current = window.setTimeout(() => {
+      setIsWrapTransition(false);
+    }, 440);
+  }, []);
   const { posX, isLeft, isRight, isJumping, moveLeft, moveRight, stopMove, jump } =
-    useCharacterMovement(contentRef, characterRef);
+    useCharacterMovement(contentRef, characterRef, 220, 190, {
+      wrap: true,
+      onWrapStart: handleWorldWrap,
+    });
   const { playClick, playTransition, playWalk, unlocked } = useGame();
+  const hasLegendaryCrown = hasLegendaryReward(unlocked);
   const [isStatusVisible, setIsStatusVisible] = useState(false);
 
   const activeStation = useMemo(
@@ -90,6 +103,10 @@ export default function About() {
     return () => clearInterval(id);
   }, [isLeft, isRight, playWalk]);
 
+  useEffect(() => () => {
+    if (wrapTransitionTimer.current) clearTimeout(wrapTransitionTimer.current);
+  }, []);
+
   return (
     <div className={cx('about')}>
       <div className={cx('about-content')} ref={contentRef}>
@@ -135,7 +152,6 @@ export default function About() {
                 aria-label={station.label}
               >
                 <span className={cx('about-station__icon')} />
-                <span className={cx('about-station__prompt')}>Enter</span>
                 <span className={cx('about-station__label')}>{station.label}</span>
               </button>
             ))}
@@ -154,7 +170,7 @@ export default function About() {
             role="img"
             aria-label="이동 중인 캐릭터"
           >
-            {unlocked.has('legendary') && (
+            {hasLegendaryCrown && (
               <span className={cx('about-character__reward')} aria-label="전설의 왕관 스킨" />
             )}
             <span className={cx('about-character__name')}>MINE</span>
@@ -177,6 +193,19 @@ export default function About() {
           </aside>
         </div>
       </div>
+
+      <AnimatePresence>
+        {isWrapTransition && (
+          <motion.div
+            className={cx('about-wrap-transition')}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18, ease: 'easeInOut' }}
+            aria-hidden
+          />
+        )}
+      </AnimatePresence>
 
       <div className={cx('about-mobile-controls')} aria-label="모바일 이동 키패드">
         <button

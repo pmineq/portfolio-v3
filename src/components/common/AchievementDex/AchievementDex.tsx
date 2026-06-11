@@ -18,7 +18,7 @@ const ACHIEVEMENT_HINTS: Record<string, string> = {
   jump_collector: '공중 아이템 근처에서 점프해보세요.',
   mail_carrier: 'Contact에서 메시지를 보내보세요.',
   lost_explorer: '없는 주소로 살짝 길을 잃어보세요.',
-  secret_shopper: '홈 어딘가의 작은 표지판을 찾아보세요.',
+  secret_shopper: '홈 어딘가에 숨어 있는 친구를 찾아보세요.',
   explorer: 'About, Career, Contact를 모두 둘러보세요.',
   legendary: '나머지 업적을 모두 모으면 열립니다.',
 };

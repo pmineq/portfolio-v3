@@ -1,10 +1,19 @@
 import { useCallback, useEffect, type RefObject, useRef, useState } from 'react';
 
+interface CharacterMovementOptions {
+  wrap?: boolean;
+  wrapDelayMs?: number;
+  onWrapStart?: () => void;
+}
+
+const MOVEMENT_SPEED_MULTIPLIER = 2;
+
 export function useCharacterMovement(
   containerRef: RefObject<HTMLElement | null>,
   characterRef: RefObject<HTMLElement | null>,
   speed = 220,
   initialX = 190,
+  options: CharacterMovementOptions = {},
 ) {
   const [posX, setPosX] = useState(initialX);
   const [isRight, setIsRight] = useState(false);
@@ -17,8 +26,13 @@ export function useCharacterMovement(
   const rafRef = useRef<number | null>(null);
   const lastTsRef = useRef<number | null>(null);
   const jumpTimerRef = useRef<number | null>(null);
+  const wrapTimerRef = useRef<number | null>(null);
+  const isWrappingRef = useRef(false);
   const keyLeftRef = useRef(false);
   const keyRightRef = useRef(false);
+  const optionsRef = useRef(options);
+
+  optionsRef.current = options;
 
   const clearIdleTimer = () => {
     if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
@@ -60,6 +74,35 @@ export function useCharacterMovement(
     }
 
     container.scrollLeft += diff * 0.14;
+  };
+
+  const jumpCameraTo = (x: number) => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    container.scrollLeft = Math.max(0, Math.min(maxScroll, x - container.clientWidth * 0.45));
+  };
+
+  const scheduleWrap = (targetX: number) => {
+    if (isWrappingRef.current) return;
+
+    isWrappingRef.current = true;
+    keyLeftRef.current = false;
+    keyRightRef.current = false;
+    setIsLeft(false);
+    setIsRight(false);
+    optionsRef.current.onWrapStart?.();
+
+    if (wrapTimerRef.current) clearTimeout(wrapTimerRef.current);
+    wrapTimerRef.current = window.setTimeout(() => {
+      posXRef.current = targetX;
+      setPosX(targetX);
+      jumpCameraTo(targetX);
+      isWrappingRef.current = false;
+      wrapTimerRef.current = null;
+      lastTsRef.current = null;
+    }, optionsRef.current.wrapDelayMs ?? 180);
   };
 
   const startJump = useCallback(() => {
@@ -119,13 +162,27 @@ export function useCharacterMovement(
 
     const left = keyLeftRef.current;
     const right = keyRightRef.current;
-    if (left !== right) {
+    if (!isWrappingRef.current && left !== right) {
       setPosX((prev) => {
         const dir = right ? 1 : -1;
         const { min, max } = boundsRef.current;
         const isMobile = window.matchMedia('(max-width: 760px)').matches;
-        const activeSpeed = isMobile ? speed * 1.4 : speed;
-        const next = Math.max(min, Math.min(max, prev + activeSpeed * dir * dt));
+        const activeSpeed = (isMobile ? speed * 1.4 : speed) * MOVEMENT_SPEED_MULTIPLIER;
+        const rawNext = prev + activeSpeed * dir * dt;
+
+        if (optionsRef.current.wrap) {
+          if (rawNext > max) {
+            scheduleWrap(min);
+            return prev;
+          }
+
+          if (rawNext < min) {
+            scheduleWrap(max);
+            return prev;
+          }
+        }
+
+        const next = Math.max(min, Math.min(max, rawNext));
         posXRef.current = next;
         return next;
       });
@@ -174,6 +231,7 @@ export function useCharacterMovement(
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
       if (jumpTimerRef.current) clearTimeout(jumpTimerRef.current);
+      if (wrapTimerRef.current) clearTimeout(wrapTimerRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [moveLeft, moveRight, startJump, stopMove]);

@@ -5,7 +5,7 @@ import cx from 'classnames';
 import './Home.scss';
 import SunMoonToggle from './SunMoonToggle/SunMoonToggle';
 import { useCharacterMovement } from './hook/useCharacterMovement';
-import { ACHIEVEMENTS, useGame } from 'context/GameContext';
+import { ACHIEVEMENTS, hasLegendaryReward, useGame } from 'context/GameContext';
 
 const DIALOGUES = [
   '픽셀 정렬 중...',
@@ -18,11 +18,21 @@ const DIALOGUES = [
   '접근성 체크는 습관입니다.',
 ];
 
-const BALLOON_MSGS = ['새로운 의뢰 도착!', '구름 위 QA 중', '디자인 시스템 배송 중', '오늘의 목표: 완성도 +1'];
-const ZEPPELIN_MSGS = ['배포 항로 이상 없음', '목적지: Contact', '성능 점검 완료', '다음 스테이지 준비 중'];
+const BALLOON_MSGS = [
+  '새로운 의뢰 도착!',
+  '구름 위 QA 중',
+  '디자인 시스템 배송 중',
+  '오늘의 목표: 완성도 +1',
+];
+const ZEPPELIN_MSGS = [
+  '배포 항로 이상 없음',
+  '목적지: Contact',
+  '성능 점검 완료',
+  '다음 스테이지 준비 중',
+];
 const CLOUD_NPC_MSGS = [
   '퀘스트 로그는 위에서 봐도 빼곡하네요.',
-  'Career 근처까지 왔다면 꽤 성실한 탐험가예요.',
+  'Contact 근처까지 왔다면 꽤 성실한 탐험가예요.',
   '경험치는 숫자보다 회고가 더 오래 남더라고요.',
 ];
 
@@ -135,13 +145,24 @@ export default function Home() {
   const spawnX = (location.state as HomeLocationState | null)?.spawnX;
   const homeContentRef = useRef<HTMLDivElement | null>(null);
   const characterRef = useRef<HTMLDivElement | null>(null);
+  const wrapTransitionTimer = useRef<number | null>(null);
+  const [isWrapTransition, setIsWrapTransition] = useState(false);
+  const handleWorldWrap = useCallback(() => {
+    setIsWrapTransition(true);
+    if (wrapTransitionTimer.current) clearTimeout(wrapTransitionTimer.current);
+    wrapTransitionTimer.current = window.setTimeout(() => {
+      setIsWrapTransition(false);
+    }, 440);
+  }, []);
   const { posX, isLeft, isRight, isJumping, moveLeft, moveRight, stopMove, jump } =
-    useCharacterMovement(homeContentRef, characterRef, 220, spawnX);
+    useCharacterMovement(homeContentRef, characterRef, 220, spawnX, {
+      wrap: true,
+      onWrapStart: handleWorldWrap,
+    });
   const { playClick, playWalk, playText, unlock, increment, unlocked } = useGame();
+  const hasLegendaryCrown = hasLegendaryReward(unlocked);
   const [aboutQuestDone] = useState(() => hasVisitedPage('/about'));
-  const [contactQuestDone] = useState(
-    () => localStorage.getItem(CONTACT_QUEST_KEY) === 'true',
-  );
+  const [contactQuestDone] = useState(() => localStorage.getItem(CONTACT_QUEST_KEY) === 'true');
 
   const [dialogue, setDialogue] = useState<string | null>(null);
   const bubbleTimer = useRef<number | null>(null);
@@ -196,8 +217,8 @@ export default function Home() {
 
     const dmg = pickDmg();
     const id = ++dmgId.current;
-    setDmgTexts(prev => [...prev, { id, ...dmg }]);
-    window.setTimeout(() => setDmgTexts(prev => prev.filter(d => d.id !== id)), 1100);
+    setDmgTexts((prev) => [...prev, { id, ...dmg }]);
+    window.setTimeout(() => setDmgTexts((prev) => prev.filter((d) => d.id !== id)), 1100);
     increment('char_click', 5, 'chatterbox');
   }, [playClick, increment]);
 
@@ -240,36 +261,43 @@ export default function Home() {
     }
   }, [playClick, increment, unlock]);
 
-  useEffect(() => () => {
-    if (bubbleTimer.current) clearTimeout(bubbleTimer.current);
-    if (balloonTimer.current) clearTimeout(balloonTimer.current);
-    if (zeppelinTimer.current) clearTimeout(zeppelinTimer.current);
-    if (cloudNpcTimer.current) clearTimeout(cloudNpcTimer.current);
-    if (meteorTimer.current) clearTimeout(meteorTimer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (bubbleTimer.current) clearTimeout(bubbleTimer.current);
+      if (balloonTimer.current) clearTimeout(balloonTimer.current);
+      if (zeppelinTimer.current) clearTimeout(zeppelinTimer.current);
+      if (cloudNpcTimer.current) clearTimeout(cloudNpcTimer.current);
+      if (meteorTimer.current) clearTimeout(meteorTimer.current);
+      if (wrapTransitionTimer.current) clearTimeout(wrapTransitionTimer.current);
+    },
+    [],
+  );
 
-  const startTypewriter = useCallback((line: string) => {
-    setDisplayed('');
-    setTyping(true);
-    let i = 0;
-    if (typeTimer.current) clearInterval(typeTimer.current);
-    typeTimer.current = window.setInterval(() => {
-      i++;
-      setDisplayed(line.slice(0, i));
-      playText();
-      if (i >= line.length) {
-        clearInterval(typeTimer.current!);
-        setTyping(false);
-      }
-    }, 38);
-  }, [playText]);
+  const startTypewriter = useCallback(
+    (line: string) => {
+      setDisplayed('');
+      setTyping(true);
+      let i = 0;
+      if (typeTimer.current) clearInterval(typeTimer.current);
+      typeTimer.current = window.setInterval(() => {
+        i++;
+        setDisplayed(line.slice(0, i));
+        playText();
+        if (i >= line.length) {
+          clearInterval(typeTimer.current!);
+          setTyping(false);
+        }
+      }, 38);
+    },
+    [playText],
+  );
 
   const handleNpcClick = useCallback(() => {
     if (dialogOpen) return;
-    const unlockedCount = ACHIEVEMENTS.filter(achievement => unlocked.has(achievement.id)).length;
-    const progressLines = NPC_PROGRESS_LINES
-      .filter(item => unlockedCount >= item.min)
-      .map(item => item.line);
+    const unlockedCount = ACHIEVEMENTS.filter((achievement) => unlocked.has(achievement.id)).length;
+    const progressLines = NPC_PROGRESS_LINES.filter((item) => unlockedCount >= item.min).map(
+      (item) => item.line,
+    );
     const lines = hasCompletedNpcGuide.current
       ? [pickNpcRandomLine(lastNpcRandomIndex.current, progressLines)]
       : NPC_LINES;
@@ -339,9 +367,12 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleDialogKeyDown);
   }, [dialogOpen, handleDialogNext, handleDialogClose]);
 
-  useEffect(() => () => {
-    if (typeTimer.current) clearInterval(typeTimer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (typeTimer.current) clearInterval(typeTimer.current);
+    },
+    [],
+  );
 
   useEffect(() => {
     const container = homeContentRef.current;
@@ -367,7 +398,7 @@ export default function Home() {
   }, []);
 
   const isLastLine = lineIndex === npcDialogLines.length - 1;
-  const activePortal = PORTALS.find(portal => Math.abs(posX - portal.x) < 210) ?? null;
+  const activePortal = PORTALS.find((portal) => Math.abs(posX - portal.x) < 210) ?? null;
   const capturePointer = (e: React.PointerEvent<HTMLButtonElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId);
   };
@@ -412,7 +443,7 @@ export default function Home() {
     <div className={cx('home')}>
       <div className={cx('home-content')} ref={homeContentRef}>
         <div className={cx('home-stars')} aria-hidden>
-          {STARS.map(s => (
+          {STARS.map((s) => (
             <span
               key={s.id}
               className={cx('home-star')}
@@ -471,10 +502,12 @@ export default function Home() {
         >
           <div className={cx('home-hud__header')}>
             <span>QUEST</span>
-            <strong>{quests.filter(q => q.done).length}/{quests.length}</strong>
+            <strong>
+              {quests.filter((q) => q.done).length}/{quests.length}
+            </strong>
           </div>
           <ul className={cx('home-quest-list')}>
-            {quests.map(quest => (
+            {quests.map((quest) => (
               <li key={quest.label} className={cx({ 'is-done': quest.done })}>
                 <span>{quest.done ? '완료' : '진행'}</span>
                 {quest.label}
@@ -489,10 +522,12 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.84 }}
         >
-          {STATS.map(stat => (
+          {STATS.map((stat) => (
             <div key={stat.label} className={cx('home-status__item')}>
               <span>{stat.label}</span>
-              <div><i style={{ width: `${stat.value}%` }} /></div>
+              <div>
+                <i style={{ width: `${stat.value}%` }} />
+              </div>
               <strong>{stat.value}</strong>
             </div>
           ))}
@@ -505,14 +540,16 @@ export default function Home() {
           <SunMoonToggle x={cameraCenterX} />
 
           <div className={cx('home-portals')} aria-label="포털 이동">
-            {PORTALS.map(portal => {
+            {PORTALS.map((portal) => {
               const isActive = activePortal?.id === portal.id;
 
               return (
                 <button
                   key={portal.id}
                   type="button"
-                  className={cx('home-portal', `home-portal--${portal.id}`, { 'is-active': isActive })}
+                  className={cx('home-portal', `home-portal--${portal.id}`, {
+                    'is-active': isActive,
+                  })}
                   style={
                     {
                       '--portal-x': `${portal.x}px`,
@@ -523,11 +560,7 @@ export default function Home() {
                     playClick();
                     navigate(portal.path);
                   }}
-                >
-                  <span className={cx('home-portal__prompt')}>
-                    {isActive ? 'Enter 입장' : portal.label}
-                  </span>
-                </button>
+                />
               );
             })}
           </div>
@@ -602,7 +635,9 @@ export default function Home() {
                 </motion.span>
               )}
             </AnimatePresence>
-            <span className={cx('home-cloud-npc__face')} aria-hidden>?</span>
+            <span className={cx('home-cloud-npc__face')} aria-hidden>
+              ?
+            </span>
           </button>
 
           <button
@@ -640,28 +675,33 @@ export default function Home() {
             className={cx('home-secret-shop')}
             style={{ '--shop-x': `${SECRET_SHOP_X}px` } as CSSProperties}
             onClick={handleSecretShopClick}
-            aria-label="비밀 상점 열기"
+            aria-label="숨은 카멜레온 찾기"
           >
-            <span>SHOP</span>
+            <span>CAMO</span>
           </button>
 
           <div className={cx('home-bottom')} aria-hidden />
 
           <div className={cx('home-actors')}>
-            <button type="button" className={cx('home-npc')} onClick={handleNpcClick} aria-label="가이드와 대화하기">
-            <AnimatePresence>
-              {!dialogOpen && (
-                <motion.span
-                  className={cx('home-npc__indicator')}
-                  animate={{ y: [-4, 0, -4] }}
-                  transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                  !
-                </motion.span>
-              )}
-            </AnimatePresence>
-            <div className={cx('home-npc__sprite')} />
-            <span className={cx('home-npc__name')}>가이드</span>
+            <button
+              type="button"
+              className={cx('home-npc')}
+              onClick={handleNpcClick}
+              aria-label="가이드와 대화하기"
+            >
+              <AnimatePresence>
+                {!dialogOpen && (
+                  <motion.span
+                    className={cx('home-npc__indicator')}
+                    animate={{ y: [-4, 0, -4] }}
+                    transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    !
+                  </motion.span>
+                )}
+              </AnimatePresence>
+              <div className={cx('home-npc__sprite')} />
+              <span className={cx('home-npc__name')}>가이드</span>
             </button>
 
             <div className={cx('home-character')}>
@@ -672,58 +712,71 @@ export default function Home() {
                   { 'home-character_character--right': isRight },
                   { 'home-character_character--left': isLeft },
                   { 'home-character_character--jump': isJumping },
-                  { 'home-character_character--legendary': unlocked.has('legendary') },
+                  { 'home-character_character--legendary': hasLegendaryCrown },
                 )}
                 style={{ '--character-x': `${posX}px` } as CSSProperties}
-                onMouseDown={e => e.preventDefault()}
-                onClick={e => {
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
                   e.currentTarget.blur();
                   handleCharacterClick();
                 }}
-                onKeyDown={e => e.key === 'Enter' && handleCharacterClick()}
+                onKeyDown={(e) => e.key === 'Enter' && handleCharacterClick()}
                 role="button"
                 tabIndex={0}
                 aria-label="캐릭터에게 말 걸기"
               >
-              {dmgTexts.map(dmg => (
-                <motion.span
-                  key={dmg.id}
-                  className={cx('home-character_dmg')}
-                  style={{ color: dmg.color, left: `calc(50% + ${dmg.x}px)` }}
-                  initial={{ opacity: 1, y: 0, scale: 1 }}
-                  animate={{ opacity: 0, y: -52, scale: 1.1 }}
-                  transition={{ duration: 1.0, ease: 'easeOut' }}
-                >
-                  {dmg.text}
-                </motion.span>
-              ))}
-              <AnimatePresence>
-                {dialogue && (
-                  <motion.div
-                    key={dialogue}
-                    className={cx('home-character_bubble')}
-                    initial={{ opacity: 0, y: 6, scale: 0.85 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.85 }}
-                    transition={{ duration: 0.18 }}
+                {dmgTexts.map((dmg) => (
+                  <motion.span
+                    key={dmg.id}
+                    className={cx('home-character_dmg')}
+                    style={{ color: dmg.color, left: `calc(50% + ${dmg.x}px)` }}
+                    initial={{ opacity: 1, y: 0, scale: 1 }}
+                    animate={{ opacity: 0, y: -52, scale: 1.1 }}
+                    transition={{ duration: 1.0, ease: 'easeOut' }}
                   >
-                    {dialogue}
-                  </motion.div>
+                    {dmg.text}
+                  </motion.span>
+                ))}
+                <AnimatePresence>
+                  {dialogue && (
+                    <motion.div
+                      key={dialogue}
+                      className={cx('home-character_bubble')}
+                      initial={{ opacity: 0, y: 6, scale: 0.85 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.85 }}
+                      transition={{ duration: 0.18 }}
+                    >
+                      {dialogue}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <span className={cx('home-character_level')}>
+                  Lv. <em>6</em>
+                  <span className={cx('home-character_level-small')}>년차</span>
+                </span>
+                {hasLegendaryCrown && (
+                  <span className={cx('home-character_reward')} aria-label="전설의 왕관 스킨" />
                 )}
-              </AnimatePresence>
-              <span className={cx('home-character_level')}>
-                Lv. <em>6</em>
-                <span className={cx('home-character_level-small')}>년차</span>
-              </span>
-              {unlocked.has('legendary') && (
-                <span className={cx('home-character_reward')} aria-label="전설의 왕관 스킨" />
-              )}
-              <span className={cx('home-character_name')}>MINE</span>
+                <span className={cx('home-character_name')}>MINE</span>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {isWrapTransition && (
+          <motion.div
+            className={cx('home-wrap-transition')}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18, ease: 'easeInOut' }}
+            aria-hidden
+          />
+        )}
+      </AnimatePresence>
 
       <div className={cx('home-mobile-controls')} aria-label="모바일 이동 키패드">
         <button
@@ -796,20 +849,32 @@ export default function Home() {
             aria-labelledby="home-shop-title"
           >
             <div className={cx('home-shop__header')}>
-              <span>SECRET SHOP</span>
-              <button type="button" onClick={() => setShopOpen(false)} aria-label="비밀 상점 닫기">×</button>
+              <span>HIDDEN CHAMELEON</span>
+              <button
+                type="button"
+                onClick={() => setShopOpen(false)}
+                aria-label="숨은 카멜레온 팝업 닫기"
+              >
+                ×
+              </button>
             </div>
             <div className={cx('home-shop__body')}>
-              <h2 id="home-shop-title">숨은 상점</h2>
-              <p>보유 업적이 늘어날수록 희귀한 보상이 진열됩니다.</p>
+              <h2 id="home-shop-title">숨은 카멜레온</h2>
+              <p>
+                배경에 몸을 숨긴 작은 친구를 발견했습니다.
+                <br />
+                관찰력이 꽤 좋네요.
+              </p>
               <ul>
                 <li className={cx({ 'is-owned': unlocked.has('secret_shopper') })}>
-                  <strong>상점 발견 배지</strong>
-                  <span>{unlocked.has('secret_shopper') ? '획득 완료' : '표지판을 눌러 입장'}</span>
+                  <strong>카멜레온 발견 배지</strong>
+                  <span>
+                    {unlocked.has('secret_shopper') ? '발견 완료' : '숨어 있는 친구를 찾아보세요'}
+                  </span>
                 </li>
-                <li className={cx({ 'is-owned': unlocked.has('legendary') })}>
+                <li className={cx({ 'is-owned': hasLegendaryCrown })}>
                   <strong>전설의 왕관 스킨</strong>
-                  <span>{unlocked.has('legendary') ? '캐릭터에게 장착됨' : '모든 업적 달성 필요'}</span>
+                  <span>{hasLegendaryCrown ? '캐릭터에게 장착됨' : '모든 업적 달성 필요'}</span>
                 </li>
               </ul>
             </div>
@@ -828,7 +893,14 @@ export default function Home() {
           >
             <div className={cx('home-dialog__header')}>
               <span className={cx('home-dialog__speaker')}>가이드</span>
-              <button type="button" className={cx('home-dialog__close')} onClick={handleDialogClose} aria-label="닫기">×</button>
+              <button
+                type="button"
+                className={cx('home-dialog__close')}
+                onClick={handleDialogClose}
+                aria-label="닫기"
+              >
+                ×
+              </button>
             </div>
             <div className={cx('home-dialog__body')}>
               <div className={cx('home-dialog__npc')} />
