@@ -7,9 +7,10 @@ test('a direct About visit counts towards the explorer achievement', async ({ pa
     JSON.parse(localStorage.getItem('ach_vis') ?? '[]') as string[],
   )).toContain('/about');
   await page.getByRole('link', { name: 'Career', exact: true }).click();
-  await expect(page).toHaveURL(/\/career$/);
+  // The URL changes before the lazy route has finished loading.
+  await expect(page.getByText('Company Logs', { exact: true })).toBeVisible();
   await page.getByRole('link', { name: 'Contact', exact: true }).click();
-  await expect(page).toHaveURL(/\/contact$/);
+  await expect(page.locator('#name')).toBeVisible();
   await expect.poll(() => page.evaluate(() => ({
     visited: JSON.parse(localStorage.getItem('ach_vis') ?? '[]') as string[],
     achievements: JSON.parse(localStorage.getItem('ach') ?? '[]') as string[],
