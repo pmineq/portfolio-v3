@@ -1,5 +1,5 @@
 import cx from 'classnames';
-import { useGame } from 'context/GameContext';
+import { useGame } from 'context/game';
 import { useLocation } from 'react-router-dom';
 import 'assets/styles/layout.scss';
 

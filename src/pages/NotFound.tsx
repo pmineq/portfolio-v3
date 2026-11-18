@@ -1,7 +1,7 @@
 import cx from 'classnames';
 import { useEffect, type CSSProperties } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useGame } from 'context/GameContext';
+import { useGame } from 'context/game';
 import './NotFound.scss';
 
 const rescueSteps = ['SCAN', 'MAP', 'WARP'];

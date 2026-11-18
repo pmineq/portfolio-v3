@@ -34,17 +34,17 @@ export function useCharacterMovement(
 
   optionsRef.current = options;
 
-  const clearIdleTimer = () => {
+  const clearIdleTimer = useCallback(() => {
     if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
-  };
+  }, []);
 
-  const startIdleTimer = () => {
+  const startIdleTimer = useCallback(() => {
     clearIdleTimer();
     idleTimerRef.current = window.setTimeout(() => {
       setIsLeft(false);
       setIsRight(false);
     }, 1000);
-  };
+  }, [clearIdleTimer]);
 
   const updateBounds = () => {
     const containerWidth = containerRef.current?.clientWidth ?? 0;
@@ -120,7 +120,7 @@ export function useCharacterMovement(
     keyRightRef.current = false;
     setIsLeft(true);
     setIsRight(false);
-  }, []);
+  }, [clearIdleTimer]);
 
   const moveRight = useCallback(() => {
     clearIdleTimer();
@@ -128,7 +128,7 @@ export function useCharacterMovement(
     keyLeftRef.current = false;
     setIsRight(true);
     setIsLeft(false);
-  }, []);
+  }, [clearIdleTimer]);
 
   const stopMove = useCallback((direction?: 'left' | 'right') => {
     if (direction === 'left') {
@@ -153,11 +153,11 @@ export function useCharacterMovement(
     }
 
     startIdleTimer();
-  }, []);
+  }, [startIdleTimer]);
 
   const tick = (ts: number) => {
     if (lastTsRef.current == null) lastTsRef.current = ts;
-    const dt = (ts - (lastTsRef.current || ts)) / 1000;
+    const dt = Math.min((ts - (lastTsRef.current ?? ts)) / 1000, 0.05);
     lastTsRef.current = ts;
 
     const left = keyLeftRef.current;
@@ -192,6 +192,17 @@ export function useCharacterMovement(
   };
 
   useEffect(() => {
+    const resetMovement = () => {
+      keyLeftRef.current = false;
+      keyRightRef.current = false;
+      clearIdleTimer();
+      setIsLeft(false);
+      setIsRight(false);
+      lastTsRef.current = null;
+    };
+    const handleVisibilityChange = () => {
+      if (document.hidden) resetMovement();
+    };
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight' || e.key === 'Right') {
         e.preventDefault();
@@ -214,6 +225,8 @@ export function useCharacterMovement(
 
     window.addEventListener('keydown', handleKeyDown, { passive: false });
     window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('blur', resetMovement);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     updateBounds();
 
     const resizeObserver = new ResizeObserver(updateBounds);
@@ -226,6 +239,8 @@ export function useCharacterMovement(
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('blur', resetMovement);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('resize', updateBounds);
       resizeObserver.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);

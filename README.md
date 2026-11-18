@@ -26,6 +26,23 @@
 - Sass
 - EmailJS
 
+## 검증
+
+Node.js 22와 Yarn 1.22.22를 기준으로 실행합니다.
+
+```bash
+corepack enable
+yarn install --frozen-lockfile
+yarn lint
+yarn build
+yarn playwright install
+yarn test:e2e
+```
+
+GitHub Actions에서 macOS와 Windows의 설치, 린트, 빌드, Chromium 회귀 테스트를 검사합니다.
+로컬 회귀 테스트는 Chromium, Firefox, WebKit에서 직접 경로 진입 시 업적 진행,
+포커스 이탈 시 이동 중지, 모바일 알림 위치를 확인합니다.
+
 ## 프로젝트 구조
 
 ```txt

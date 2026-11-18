@@ -7,7 +7,8 @@ import BootLoader from 'components/common/Loader/Loader';
 import AchievementToast from 'components/common/AchievementToast/AchievementToast';
 import LocationHUD from 'components/common/LocationHUD/LocationHUD';
 import KonamiEffect from 'components/common/KonamiEffect/KonamiEffect';
-import { GameProvider, useGame } from 'context/GameContext';
+import { GameProvider } from 'context/GameContext';
+import { useGame } from 'context/game';
 import { useKonamiCode } from 'hooks/useKonamiCode';
 import { preloadImages } from '../utils/preloadImages';
 import homeBg from 'assets/images/home/home-bg.webp';
@@ -103,8 +104,7 @@ function Layout() {
       playTransition();
       trackPage(location.pathname);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  }, [boot, location.pathname, playTransition, trackPage]);
 
   return (
     <>

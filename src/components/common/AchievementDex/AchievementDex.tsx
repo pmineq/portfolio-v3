@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import cx from 'classnames';
-import { ACHIEVEMENTS, useGame } from 'context/GameContext';
+import { ACHIEVEMENTS, useGame } from 'context/game';
 import './AchievementDex.scss';
 
 const ACHIEVEMENT_HINTS: Record<string, string> = {

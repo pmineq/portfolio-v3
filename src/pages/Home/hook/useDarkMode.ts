@@ -37,7 +37,9 @@ export function useDarkMode() {
     applyToHtml(isDark);
     try {
       localStorage.setItem(STORAGE_KEY, String(isDark));
-    } catch {}
+    } catch {
+      // Keep the theme usable when browser storage is unavailable.
+    }
   }, [isDark]);
 
   // 시스템 테마/다른 탭 변경 반영

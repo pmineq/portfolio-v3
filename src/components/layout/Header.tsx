@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import cx from 'classnames';
 import 'assets/styles/layout.scss';
 import AchievementDex from 'components/common/AchievementDex/AchievementDex';
-import { ACHIEVEMENTS, useGame } from 'context/GameContext';
+import { ACHIEVEMENTS, useGame } from 'context/game';
 
 export default function Header() {
   const { pathname } = useLocation();

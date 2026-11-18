@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import cx from 'classnames';
 import './Contact.scss';
 import { useEmailJS } from 'hooks/useEmailJS';
-import { useGame } from 'context/GameContext';
+import { useGame } from 'context/game';
 
 const CONTACT_PHONE = '010-3193-8441';
 const CONTACT_QUEST_KEY = 'quest_contact_sent';
@@ -62,7 +62,7 @@ export default function Contact() {
         message: '',
       });
       setIsAgreed(false);
-    } catch (err) {
+    } catch {
       playClick();
       alert('메일 전송에 실패했습니다. 다시 시도해주세요.');
     }

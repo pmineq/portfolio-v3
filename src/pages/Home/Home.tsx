@@ -5,7 +5,7 @@ import cx from 'classnames';
 import './Home.scss';
 import SunMoonToggle from './SunMoonToggle/SunMoonToggle';
 import { useCharacterMovement } from './hook/useCharacterMovement';
-import { ACHIEVEMENTS, hasLegendaryReward, useGame } from 'context/GameContext';
+import { ACHIEVEMENTS, hasLegendaryReward, useGame } from 'context/game';
 
 const DIALOGUES = [
   '픽셀 정렬 중...',

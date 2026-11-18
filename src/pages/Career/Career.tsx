@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import cx from 'classnames';
 import LocationHUD from 'components/common/LocationHUD/LocationHUD';
-import { hasLegendaryReward, useGame } from 'context/GameContext';
+import { hasLegendaryReward, useGame } from 'context/game';
 import { useCharacterMovement } from 'pages/Home/hook/useCharacterMovement';
 import './Career.scss';
 

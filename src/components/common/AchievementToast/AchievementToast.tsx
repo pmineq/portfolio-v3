@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import cx from 'classnames';
-import { useGame } from 'context/GameContext';
+import { useGame } from 'context/game';
 import './AchievementToast.scss';
 
 export default function AchievementToast() {

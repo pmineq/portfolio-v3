@@ -2,7 +2,7 @@ import { useState, useRef, type CSSProperties } from 'react';
 import cx from 'classnames';
 import './SunMoonToggle.scss';
 import { useDarkMode } from '../hook/useDarkMode';
-import { useGame } from 'context/GameContext';
+import { useGame } from 'context/game';
 
 interface SunMoonToggleProps {
   x?: number;
